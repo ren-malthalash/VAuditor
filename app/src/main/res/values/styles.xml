@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DarkModeButton" parent="Widget.MaterialComponents.Button">
+        <!-- Change button background color -->
+        <item name="backgroundTint">@color/grey_700</item>
+        <!-- Change button text color -->
+        <item name="android:textColor">@android:color/white</item>
+        <!-- Button corner radius -->
+        <item name="cornerRadius">16dp</item>
+        <!-- Change button elevation -->
+        <item name="elevation">4dp</item>
+        <!-- Add padding inside button -->
+        <item name="android:padding">12dp</item>
+    </style>
+</resources>

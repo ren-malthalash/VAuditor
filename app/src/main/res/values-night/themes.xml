@@ -1,0 +1,27 @@
+<resources>
+
+    <style name="Theme.VAuditor" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Customize your dark theme -->
+        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSecondary">@color/grey_700</item>
+        <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button.OutlinedButton
+        </item>
+        <!-- Add more attributes to customize the theme -->
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="textFillColor">@android:color/white</item>
+        <item name="colorSurface">@color/grey_900</item>
+        <item name="colorOnSurface">@android:color/white</item>
+    </style>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.VAuditor" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    </style>
+    <!-- Base application theme. -->
+    <!--    <style name="Base.Theme.VAuditor" parent="Theme.Material3.DayNight.NoActionBar">-->
+    <!--        &lt;!&ndash; Customize your dark theme here. &ndash;&gt;-->
+    <!--        &lt;!&ndash; <item name="colorPrimary">@color/my_dark_primary</item> &ndash;&gt;-->
+    <!--    </style>-->
+</resources>
