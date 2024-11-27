@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "744202842446",
+    "project_id": "vauditor-app",
+    "storage_bucket": "vauditor-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744202842446:android:837d25b0def37f72e06e1f",
+        "android_client_info": {
+          "package_name": "com.mobdev.x22.tordillo.christiandave.vauditor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvt7UfbvAHzdvSFpY_66eqmHAGGwRqwDw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
