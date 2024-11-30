@@ -16,11 +16,11 @@ public class BalanceAccountModel extends BaseModel {
 
     BalanceAccountModel() {}
 
-    BalanceAccountModel(long balanceAccId,
-                        String balanceAccName,
-                        BalanceAccountType balanceAccType,
-                        BigDecimal balanceAccBalance,
-                        boolean balanceAccountDeleted) {
+    public BalanceAccountModel(long balanceAccId,
+                               String balanceAccName,
+                               BalanceAccountType balanceAccType,
+                               BigDecimal balanceAccBalance,
+                               boolean balanceAccountDeleted) {
         this.balanceAccId = balanceAccId;
         this.balanceAccName = balanceAccName;
         this.balanceAccType = balanceAccType;
