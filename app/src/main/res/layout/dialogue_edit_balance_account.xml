@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:textSize="20sp"
+        android:text="Edit Balance Account"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="5dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_account_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:hint="Account Name"
+            android:background="@color/white"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="60dp"
+        android:layout_width="match_parent"
+
+        android:padding="5dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_account_type"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:hint="Account Type"
+            android:background="@color/white"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="60dp"
+        android:layout_width="match_parent"
+
+        android:padding="5dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_initial_balance"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:hint="Initial Balance"
+            android:background="@color/white"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="60dp"
+        android:layout_width="match_parent"
+
+        android:padding="5dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_notes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:hint="Notes"
+            android:background="@color/white"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>
