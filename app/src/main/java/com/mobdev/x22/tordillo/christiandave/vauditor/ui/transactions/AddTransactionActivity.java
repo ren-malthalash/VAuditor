@@ -25,6 +25,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.mobdev.x22.tordillo.christiandave.vauditor.MainActivity;
 import com.mobdev.x22.tordillo.christiandave.vauditor.R;
+import com.mobdev.x22.tordillo.christiandave.vauditor.database.DatabaseManager;
 import com.mobdev.x22.tordillo.christiandave.vauditor.databinding.ActivityAddTransactionBinding;
 import com.mobdev.x22.tordillo.christiandave.vauditor.model.transactions.TransactionModel;
 
@@ -39,6 +40,7 @@ public class AddTransactionActivity extends AppCompatActivity {
     private EditText transactionNotes;
     private Button cancel;
     private Button save;
+    DatabaseManager dbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,8 @@ public class AddTransactionActivity extends AppCompatActivity {
                 BigDecimal bdTransactionAmount = new BigDecimal(Long.parseLong(transactionAmount.getText().toString()));
                 // transactionId and transactionGroupId has a value of 1 as idk how to increment it properly
                 transactionModel = new TransactionModel(1,1,transactionName.getText().toString(), bdTransactionAmount, transactionNotes.getText().toString());
-                transactionModel.generateContentValuesWithoutId();
+                dbManager = new DatabaseManager(getApplicationContext());
+                dbManager.insertTransaction(transactionModel.getTransactionGroupId(), transactionModel);
             }
 
         });
