@@ -72,17 +72,13 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             this.transactionBinding.transactionAmount.setText(this.transaction.getTransactionAmount().toString());
             this.transactionBinding.transactionNotes.setText(this.transaction.getTransactionNotes());
         }
-        /*  When the itemView is clicked on, a custom dialogue will be shown. See
-         *  showCustomDialogue()for more details.
-         */
+
+
         @Override
         public void onClick(View view) {
             showCustomDialogue().show();
         }
 
-        /*  Shows a custom dialogue that helps with (1) showing the encoded information of a media
-         *  item, (2) allowing the user to modify parts of the item, and (3) perform an update.
-         */
         private Dialog showCustomDialogue() {
             DialogueEditTransactionBinding dialogueEditTransactionBinding = DialogueEditTransactionBinding.inflate(activity.getLayoutInflater());
 
@@ -91,10 +87,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             dialogueEditTransactionBinding.editNotes.setText(this.transaction.getTransactionNotes());
 
             return new AlertDialog.Builder(activity)
-                    /*  If the user presses update, the encoded information is updated in the
-                     *  array list (via updatePlayListMediaItem()) and in the DB (via
-                     *  playlistDatabase.updateMedia().
-                     */
+
                     .setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             DatabaseManager transactionDB = new DatabaseManager(activity.getApplicationContext());
@@ -108,11 +101,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                                         singleTransaction.getTransactionAmount(),
                                         singleTransaction.getTransactionNotes());
 
-                                // i plan to call updateTransaction below, although it needs ContentValues
-                                // for the second parameter, im not sure if its appropriate to call this here
-                                //transactionDB.updateTransaction(singleTransaction.getTransactionId(), );
+                                transactionDB.updateTransaction(singleTransaction.getTransactionId(), singleTransaction);
 
-                                //updatePlayListMediaItem(myPosition, mediaItem);
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }

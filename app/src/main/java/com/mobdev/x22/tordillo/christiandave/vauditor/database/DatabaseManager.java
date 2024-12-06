@@ -10,6 +10,7 @@ import com.mobdev.x22.tordillo.christiandave.vauditor.database.balanceaccounts.B
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.balanceaccounts.BalanceAccountDbHelper;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.notifications.NotificationContract.NotificationEntry;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.notifications.NotificationsDbHelper;
+import com.mobdev.x22.tordillo.christiandave.vauditor.database.transactions.TransactionContract;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.transactions.TransactionContract.TransactionEntry;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.transactions.TransactionGroupContract.TransactionGroupEntry;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.transactions.TransactionsDbHelper;
@@ -99,12 +100,31 @@ public class DatabaseManager {
 //        return transaction_id;
 //    }
 
+
+    /* commented this one out
     public void updateTransaction(long _id, ContentValues values) {
         SQLiteDatabase db = balanceAccountDbHelper.getWritableDatabase();
         db.update(TransactionEntry.TABLE_NAME,
                 values,
                 UPDATE_WHERE_CLAUSE,
                 new String[] {String.valueOf(_id)} );
+        db.close();
+    }*/
+
+    public void updateTransaction(long _id, TransactionModel transactionModel) {
+        SQLiteDatabase db = balanceAccountDbHelper.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(TransactionEntry.COLUMN_GROUP_ID, transactionModel.getTransactionGroupId());
+        contentValues.put(TransactionEntry.COLUMN_NAME, transactionModel.getTransactionName());
+        contentValues.put(TransactionEntry.COLUMN_AMOUNT, transactionModel.getTransactionAmount().toString());
+        contentValues.put(TransactionEntry.COLUMN_NOTES, transactionModel.getTransactionNotes());
+
+        db.update(TransactionEntry.TABLE_NAME,
+                contentValues,
+                UPDATE_WHERE_CLAUSE,
+                new String[]{String.valueOf(_id)});
         db.close();
     }
 
