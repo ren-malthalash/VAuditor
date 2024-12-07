@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.mobdev.x22.tordillo.christiandave.vauditor.MainActivity;
 import com.mobdev.x22.tordillo.christiandave.vauditor.R;
+import com.mobdev.x22.tordillo.christiandave.vauditor.database.DatabaseManager;
 import com.mobdev.x22.tordillo.christiandave.vauditor.databinding.ActivityAddBalanceAccountBinding;
 import com.mobdev.x22.tordillo.christiandave.vauditor.databinding.ActivityAddTransactionBinding;
 import com.mobdev.x22.tordillo.christiandave.vauditor.model.balanceaccount.BalanceAccountModel;
@@ -36,6 +37,8 @@ public class AddBalanceAccountActivity extends AppCompatActivity {
     private EditText notes;
     private Button cancel;
     private Button save;
+    DatabaseManager dbManager;
+    private BalanceAccountType type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +67,8 @@ public class AddBalanceAccountActivity extends AppCompatActivity {
                 BigDecimal bdAccountBalance = new BigDecimal(Long.parseLong(initialBalance.getText().toString()));
                 balanceAccountModel = new BalanceAccountModel(1, accountName.getText().toString(), BalanceAccountType.values()[accountType.getSelectedItemPosition()], bdAccountBalance, false);
                 balanceAccountModel.generateContentValuesWithoutId();
-                Intent intent = new Intent(AddBalanceAccountActivity.this, MainActivity.class);
-                startActivity(intent);
+                dbManager = new DatabaseManager(getApplicationContext());
+                dbManager.insertBalanceAccount(balanceAccountModel);
             }
         });
 
@@ -75,6 +78,10 @@ public class AddBalanceAccountActivity extends AppCompatActivity {
                 Intent intent = new Intent(AddBalanceAccountActivity.this, MainActivity.class);
                 startActivity(intent);
             }
+
         });
+
+
+
     }
 }
