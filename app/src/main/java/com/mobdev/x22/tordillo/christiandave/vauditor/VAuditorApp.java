@@ -23,6 +23,6 @@ public class VAuditorApp extends Application {
         super.onCreate();
         Log.d("APP START","CREATING TIME");
         instance = this;
-        databaseManager = new DatabaseManager(this);
+        databaseManager = new DatabaseManager(getApplicationContext());
     }
 }

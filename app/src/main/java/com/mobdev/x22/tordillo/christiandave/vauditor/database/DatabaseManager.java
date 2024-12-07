@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.balanceaccounts.BalanceAccountContract.BalanceAccountEntry;
@@ -26,7 +27,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 public class DatabaseManager {
-    public static final int GLOBAL_DATABASE_VERSION = 13;
+    public static final int GLOBAL_DATABASE_VERSION = 6;
     public static final String DATABASE_NAME_VAUDITOR_DATA = "VAuditorData.db";
     private static final String UPDATE_WHERE_CLAUSE = "id = ?";
 
@@ -39,14 +40,18 @@ public class DatabaseManager {
         balanceAccountDbHelper = new BalanceAccountDbHelper(context);
         notificationsDbHelper = new NotificationsDbHelper(context);
         initializeDatabases();
+        Log.d("DatabasePath", context.getDatabasePath(DATABASE_NAME_VAUDITOR_DATA).getAbsolutePath());
     }
 
     private void initializeDatabases() {
-        balanceAccountDbHelper.getReadableDatabase();
+        Log.d("Start create", "Balance Account");
+        balanceAccountDbHelper.getWritableDatabase();
         balanceAccountDbHelper.close();
-        transactionsDbHelper.getReadableDatabase();
+        Log.d("Start create", "Transactions");
+        transactionsDbHelper.getWritableDatabase();
         transactionsDbHelper.close();
-        notificationsDbHelper.getReadableDatabase();
+        Log.d("Start create", "Notifications");
+        notificationsDbHelper.getWritableDatabase();
         notificationsDbHelper.close();
     }
 
@@ -443,10 +448,7 @@ public class DatabaseManager {
         final String selection = NotificationEntry.COLUMN_VIEWED + " = ?";
         final String[] selectionArgs = {"0"};
         final String[] columns = {
-                NotificationEntry._ID,
-                NotificationEntry.COLUMN_DATE,
-                NotificationEntry.COLUMN_TITLE,
-                NotificationEntry.COLUMN_BODY
+                NotificationEntry._ID
         };
 
         Cursor cursor = db.query(

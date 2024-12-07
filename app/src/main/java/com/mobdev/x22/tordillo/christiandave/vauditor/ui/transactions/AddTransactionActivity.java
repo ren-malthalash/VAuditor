@@ -18,6 +18,7 @@ import android.widget.Spinner;
 
 import com.mobdev.x22.tordillo.christiandave.vauditor.MainActivity;
 import com.mobdev.x22.tordillo.christiandave.vauditor.R;
+import com.mobdev.x22.tordillo.christiandave.vauditor.VAuditorApp;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.DatabaseManager;
 import com.mobdev.x22.tordillo.christiandave.vauditor.databinding.ActivityAddTransactionBinding;
 import com.mobdev.x22.tordillo.christiandave.vauditor.model.transactions.TransactionGroupModel;
@@ -59,7 +60,7 @@ public class AddTransactionActivity extends AppCompatActivity {
         cancel = view.findViewById(R.id.btn_cancel);
         save = view.findViewById(R.id.btn_save);
 
-        dbManager = new DatabaseManager(getApplicationContext());
+        dbManager = VAuditorApp.getDatabaseManager();
         Dictionary<String, Long> balanceAccountNames = dbManager.getBalanceAccountNames();
 
         ArrayList<String> accountNames = Collections.list(balanceAccountNames.keys());

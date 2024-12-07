@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mobdev.x22.tordillo.christiandave.vauditor.R;
+import com.mobdev.x22.tordillo.christiandave.vauditor.VAuditorApp;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.DatabaseManager;
 import com.mobdev.x22.tordillo.christiandave.vauditor.databinding.DialogueEditTransactionBinding;
 import com.mobdev.x22.tordillo.christiandave.vauditor.databinding.ItemTransactionBinding;
@@ -85,7 +86,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
                     .setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            DatabaseManager transactionDB = new DatabaseManager(activity.getApplicationContext());
+                            DatabaseManager transactionDB = VAuditorApp.getDatabaseManager();
 
                             TransactionModel singleTransaction = null;
                             try {

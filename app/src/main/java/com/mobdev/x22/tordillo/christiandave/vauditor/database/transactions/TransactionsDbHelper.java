@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.balanceaccounts.BalanceAccountContract.BalanceAccountEntry;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.transactions.TransactionContract.TransactionEntry;
@@ -15,10 +16,8 @@ import com.mobdev.x22.tordillo.christiandave.vauditor.database.transactions.Tran
 import java.time.ZonedDateTime;
 
 public class TransactionsDbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = GLOBAL_DATABASE_VERSION;
-    public static final String DATABASE_NAME = DATABASE_NAME_VAUDITOR_DATA;
 
-    private static final String SQL_CREATE_TRANSACTION_ENTRIES =
+    public static final String SQL_CREATE_TRANSACTION_ENTRIES =
             "CREATE TABLE " +
                     TransactionEntry.TABLE_NAME + " (" +
                     TransactionEntry._ID + " INTEGER PRIMARY KEY, " +
@@ -30,7 +29,7 @@ public class TransactionsDbHelper extends SQLiteOpenHelper {
                         "REFERENCES " + TransactionGroupEntry.TABLE_NAME + "(_id) " +
                         "ON DELETE NO ACTION)";
 
-    private static final String SQL_CREATE_TRANSACTION_GROUP_ENTRIES =
+    public static final String SQL_CREATE_TRANSACTION_GROUP_ENTRIES =
             "CREATE TABLE " +
                     TransactionGroupEntry.TABLE_NAME + " (" +
                     TransactionGroupEntry._ID + " INTEGER PRIMARY KEY, " +
@@ -54,18 +53,23 @@ public class TransactionsDbHelper extends SQLiteOpenHelper {
 
 
     public TransactionsDbHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME_VAUDITOR_DATA, null, GLOBAL_DATABASE_VERSION);
+    }
+
+    public TransactionsDbHelper(Context context, String name, int version) {
+        super(context, name, null, version);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        Log.d("DB_CREATION", "Creating transaction table");
         sqLiteDatabase.execSQL(SQL_CREATE_TRANSACTION_ENTRIES);
         sqLiteDatabase.execSQL(SQL_CREATE_TRANSACTION_GROUP_ENTRIES);
         insertInitialTransactionGroups(sqLiteDatabase);
         insertInitialTransactions(sqLiteDatabase);
     }
 
-    private void insertInitialTransactionGroups(SQLiteDatabase db) {
+    public static void insertInitialTransactionGroups(SQLiteDatabase db) {
         ContentValues values = new ContentValues();
 
         values.put(TransactionGroupEntry.COLUMN_NAME, "Group A");
@@ -92,7 +96,7 @@ public class TransactionsDbHelper extends SQLiteOpenHelper {
         db.insert(TransactionGroupEntry.TABLE_NAME, null, values);
     }
 
-    private void insertInitialTransactions(SQLiteDatabase db) {
+    public static void insertInitialTransactions(SQLiteDatabase db) {
         ContentValues values = new ContentValues();
 
         // Transactions for Group A
@@ -146,5 +150,10 @@ public class TransactionsDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_DELETE_TRANSACTION_ENTRIES);
         sqLiteDatabase.execSQL(SQL_DELETE_TRANSACTION_GROUP_ENTRIES);
         onCreate(sqLiteDatabase);
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        onUpgrade(db, oldVersion, newVersion);
     }
 }
