@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.Manifest;
 import android.widget.Toast;
+
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -49,11 +51,29 @@ public class MainActivity extends AppCompatActivity {
 
     boolean bSpeechOn;
 
+    private SharedPreferences sharedPreferences;
+    private static final String PREF_NAME = "user_session";
+    private static final String KEY_IS_LOGGED_IN = "is_logged_in";
+    private static final String KEY_USERNAME = "username";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+
+        // Check login status
+        boolean isLoggedIn = sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false);
+        if (!isLoggedIn) {
+            Toast.makeText(this, "You are not logged in.", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = sharedPreferences.getString(KEY_USERNAME, "Guest");
+            Toast.makeText(this, "Welcome back, " + username, Toast.LENGTH_SHORT).show();
+        }
 
         fabVoiceRecognition = findViewById(R.id.fabVoiceRecognition);
         bSpeechOn = false;
@@ -155,4 +175,19 @@ public class MainActivity extends AppCompatActivity {
         this.notificationCount = count;
         invalidateOptionsMenu(); // Refresh the menu to reflect changes
     }
+
+    private void saveSession(String username) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(KEY_IS_LOGGED_IN, true);
+        editor.putString(KEY_USERNAME, username);
+        editor.apply();
+    }
+
+    private void clearSession() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear(); // Removes all stored data
+        editor.apply();
+    }
+
+
 }
