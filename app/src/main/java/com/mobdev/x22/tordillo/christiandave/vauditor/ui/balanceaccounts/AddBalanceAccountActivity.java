@@ -3,8 +3,10 @@ package com.mobdev.x22.tordillo.christiandave.vauditor.ui.balanceaccounts;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +31,7 @@ public class AddBalanceAccountActivity extends AppCompatActivity {
     BalanceAccountModel balanceAccountModel;
     ActivityAddBalanceAccountBinding binding;
     private EditText accountName;
-    private EditText accountType;
+    private Spinner accountType;
     private EditText initialBalance;
     private EditText notes;
     private Button cancel;
@@ -45,32 +47,34 @@ public class AddBalanceAccountActivity extends AppCompatActivity {
         setContentView(view);
 
         accountName = view.findViewById(R.id.et_account_name);
-        accountType = view.findViewById(R.id.et_account_type);
+        accountType = view.findViewById(R.id.sp_account_type);
         initialBalance = view.findViewById(R.id.et_initial_balance);
         notes = view.findViewById(R.id.et_notes);
         cancel = view.findViewById(R.id.btn_cancel);
         save = view.findViewById(R.id.btn_save);
 
+        String[] accountTypes = new String[]{"Banking Company", "Person"};
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, accountTypes);
+        accountType.setAdapter(adapter);
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 BigDecimal bdAccountBalance = new BigDecimal(Long.parseLong(initialBalance.getText().toString()));
-                // balanceAccId has a value of 1 as idk how to increment it properly
-                // BalanceAccountType temporarily set to Person
-                balanceAccountModel = new BalanceAccountModel(1, accountName.getText().toString(), BalanceAccountType.PERSON, bdAccountBalance, false);
+                balanceAccountModel = new BalanceAccountModel(1, accountName.getText().toString(), BalanceAccountType.values()[accountType.getSelectedItemPosition()], bdAccountBalance, false);
                 balanceAccountModel.generateContentValuesWithoutId();
+                Intent intent = new Intent(AddBalanceAccountActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
+
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AddBalanceAccountActivity.this, MainActivity.class);
                 startActivity(intent);
             }
-
         });
-
-
-
     }
 }
