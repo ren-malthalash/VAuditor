@@ -39,12 +39,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_background"
-                android:padding="12dp"
                 android:hint="Enter name of transaction"
-                android:textColor="#000000"
-                android:inputType="text" />
+                android:inputType="text"
+                android:padding="12dp"
+                android:textColor="#000000" />
 
             <!-- Amount Input -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,11 +61,44 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_background"
                 android:padding="12dp"
+                android:layout_marginBottom="4dp"
                 android:hint="Enter amount"
                 android:textColor="#000000"
                 android:inputType="numberDecimal" />
 
             <!-- Notes Input -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="From"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_from_account"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:textSize="16sp"
+                android:padding="5dp"
+                android:layout_margin="5dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="To"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/sp_to_account"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:textSize="16sp"
+                android:padding="5dp"
+                android:layout_margin="5dp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

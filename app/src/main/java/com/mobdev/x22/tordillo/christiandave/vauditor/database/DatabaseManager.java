@@ -10,11 +10,11 @@ import com.mobdev.x22.tordillo.christiandave.vauditor.database.balanceaccounts.B
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.balanceaccounts.BalanceAccountDbHelper;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.notifications.NotificationContract.NotificationEntry;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.notifications.NotificationsDbHelper;
-import com.mobdev.x22.tordillo.christiandave.vauditor.database.transactions.TransactionContract;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.transactions.TransactionContract.TransactionEntry;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.transactions.TransactionGroupContract.TransactionGroupEntry;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.transactions.TransactionsDbHelper;
 import com.mobdev.x22.tordillo.christiandave.vauditor.model.balanceaccount.BalanceAccountModel;
+import com.mobdev.x22.tordillo.christiandave.vauditor.model.balanceaccount.BalanceAccountType;
 import com.mobdev.x22.tordillo.christiandave.vauditor.model.notifications.NotificationModel;
 import com.mobdev.x22.tordillo.christiandave.vauditor.model.transactions.TransactionGroupModel;
 import com.mobdev.x22.tordillo.christiandave.vauditor.model.transactions.TransactionModel;
@@ -89,17 +89,112 @@ public class DatabaseManager {
         return transactionId;
     }
 
-//    public long insertTransaction(ContentValues groupValues,
-//                                  ContentValues transactionValues) {
-//        SQLiteDatabase transactionDb = transactionsDbHelper.getWritableDatabase();
-//        long group_id = transactionDb.insert(TransactionGroupEntry.TABLE_NAME, null, groupValues);
-//        transactionValues.put(TransactionEntry._ID, group_id);
-//
-//        long transaction_id = transactionDb.insert(TransactionEntry.TABLE_NAME, null, transactionValues);
-//        transactionDb.close();
-//        return transaction_id;
-//    }
+    public long insertTransaction(ContentValues groupValues,
+                                  ContentValues transactionValues) {
+        SQLiteDatabase transactionDb = transactionsDbHelper.getWritableDatabase();
+        long group_id = transactionDb.insert(TransactionGroupEntry.TABLE_NAME, null, groupValues);
+        transactionValues.put(TransactionEntry._ID, group_id);
 
+        long transaction_id = transactionDb.insert(TransactionEntry.TABLE_NAME, null, transactionValues);
+        transactionDb.close();
+        return transaction_id;
+    }
+    public ArrayList<BalanceAccountModel> findBalanceAccounts() {
+        SQLiteDatabase db = balanceAccountDbHelper.getWritableDatabase();
+        ArrayList<BalanceAccountModel> accounts = new ArrayList<>();
+
+        String[] columns = {
+                BalanceAccountEntry._ID,
+                BalanceAccountEntry.COLUMN_NAME,
+                BalanceAccountEntry.COLUMN_TYPE,
+                BalanceAccountEntry.COLUMN_BALANCE,
+                BalanceAccountEntry.COLUMN_DELETED
+        };
+
+        String selection = BalanceAccountEntry._ID + " = ?";
+
+        Cursor cursor = db.query(
+                TransactionEntry.TABLE_NAME,
+                columns,
+                selection,
+                null,
+                null,
+                null,
+                BalanceAccountEntry.COLUMN_NAME + " DESC"
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                boolean bDeleted = cursor.getInt(cursor.getColumnIndexOrThrow(BalanceAccountEntry.COLUMN_DELETED)) == 0;
+                if (bDeleted) {
+                    continue;
+                }
+
+                long id = cursor.getLong(cursor.getColumnIndexOrThrow(BalanceAccountEntry._ID));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(BalanceAccountEntry.COLUMN_NAME));
+                BalanceAccountType accountType = BalanceAccountType.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(BalanceAccountEntry.COLUMN_TYPE)));
+                BigDecimal amount = new BigDecimal(cursor.getString(cursor.getColumnIndexOrThrow(BalanceAccountEntry.COLUMN_BALANCE)));
+
+                BalanceAccountModel balanceAccount = new BalanceAccountModel(id, name, accountType, amount, false);
+                accounts.add(balanceAccount);
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        return accounts;
+    }
+
+    public ArrayList<BalanceAccountModel> findBalanceAccounts(long balanceAccountId) {
+        SQLiteDatabase db = balanceAccountDbHelper.getWritableDatabase();
+        ArrayList<BalanceAccountModel> accounts = new ArrayList<>();
+
+        String[] columns = {
+                BalanceAccountEntry._ID,
+                BalanceAccountEntry.COLUMN_NAME,
+                BalanceAccountEntry.COLUMN_TYPE,
+                BalanceAccountEntry.COLUMN_BALANCE,
+                BalanceAccountEntry.COLUMN_DELETED
+        };
+
+        String selection = BalanceAccountEntry._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(balanceAccountId) };
+
+        Cursor cursor = db.query(
+                TransactionEntry.TABLE_NAME,
+                columns,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                BalanceAccountEntry.COLUMN_NAME + " DESC"
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                boolean bDeleted = cursor.getInt(cursor.getColumnIndexOrThrow(BalanceAccountEntry.COLUMN_DELETED)) == 0;
+                if (bDeleted) {
+                    continue;
+                }
+
+                long id = cursor.getLong(cursor.getColumnIndexOrThrow(BalanceAccountEntry._ID));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(BalanceAccountEntry.COLUMN_NAME));
+                BalanceAccountType accountType = BalanceAccountType.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(BalanceAccountEntry.COLUMN_TYPE)));
+                BigDecimal amount = new BigDecimal(cursor.getString(cursor.getColumnIndexOrThrow(BalanceAccountEntry.COLUMN_BALANCE)));
+
+                BalanceAccountModel balanceAccount = new BalanceAccountModel(id, name, accountType, amount, false);
+                accounts.add(balanceAccount);
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        return accounts;
+    }
 
     /* commented this one out
     public void updateTransaction(long _id, ContentValues values) {

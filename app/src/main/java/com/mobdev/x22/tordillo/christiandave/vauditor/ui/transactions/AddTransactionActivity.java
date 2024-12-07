@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
@@ -27,6 +28,7 @@ import com.mobdev.x22.tordillo.christiandave.vauditor.MainActivity;
 import com.mobdev.x22.tordillo.christiandave.vauditor.R;
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.DatabaseManager;
 import com.mobdev.x22.tordillo.christiandave.vauditor.databinding.ActivityAddTransactionBinding;
+import com.mobdev.x22.tordillo.christiandave.vauditor.model.transactions.TransactionGroupModel;
 import com.mobdev.x22.tordillo.christiandave.vauditor.model.transactions.TransactionModel;
 
 import java.math.BigDecimal;
@@ -34,10 +36,13 @@ import java.math.BigDecimal;
 public class AddTransactionActivity extends AppCompatActivity {
 
     TransactionModel transactionModel;
+    TransactionGroupModel transactionGroupModel;
     ActivityAddTransactionBinding binding;
     private EditText transactionName;
     private EditText transactionAmount;
     private EditText transactionNotes;
+    private Spinner toAccount;
+    private Spinner fromAccount;
     private Button cancel;
     private Button save;
     DatabaseManager dbManager;
@@ -53,8 +58,12 @@ public class AddTransactionActivity extends AppCompatActivity {
         transactionName = view.findViewById(R.id.et_transaction_name);
         transactionAmount = view.findViewById(R.id.et_transaction_amount);
         transactionNotes = view.findViewById(R.id.et_transaction_notes);
+        toAccount = view.findViewById(R.id.sp_to_account);
+        fromAccount = view.findViewById(R.id.sp_from_account);
         cancel = view.findViewById(R.id.btn_cancel);
         save = view.findViewById(R.id.btn_save);
+
+
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +72,7 @@ public class AddTransactionActivity extends AppCompatActivity {
                 // transactionId and transactionGroupId has a value of 1 as idk how to increment it properly
                 transactionModel = new TransactionModel(1,1,transactionName.getText().toString(), bdTransactionAmount, transactionNotes.getText().toString());
                 dbManager = new DatabaseManager(getApplicationContext());
-                dbManager.insertTransaction(transactionModel.getTransactionGroupId(), transactionModel);
+                dbManager.insertTransaction(transactionGroupModel.generateContentValuesWithoutId(), transactionModel.generateContentValuesWithoutId());
             }
 
         });
@@ -74,7 +83,6 @@ public class AddTransactionActivity extends AppCompatActivity {
                 Intent intent = new Intent(AddTransactionActivity.this, MainActivity.class);
                 startActivity(intent);
             }
-
         });
 
     }
