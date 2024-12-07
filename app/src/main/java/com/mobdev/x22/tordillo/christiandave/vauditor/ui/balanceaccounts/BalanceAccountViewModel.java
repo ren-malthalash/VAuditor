@@ -10,7 +10,7 @@ public class BalanceAccountViewModel extends ViewModel {
 
     public BalanceAccountViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is transaction fragment");
+        mText.setValue("This is balance account fragment");
     }
 
     public LiveData<String> getText() {
