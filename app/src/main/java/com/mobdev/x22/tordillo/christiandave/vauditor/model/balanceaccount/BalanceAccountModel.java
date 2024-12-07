@@ -14,9 +14,9 @@ public class BalanceAccountModel extends BaseModel {
     private BigDecimal balanceAccBalance;
     private boolean balanceAccountDeleted;
 
-    BalanceAccountModel() {}
+    public BalanceAccountModel() {}
 
-    BalanceAccountModel(long balanceAccId,
+    public BalanceAccountModel(long balanceAccId,
                         String balanceAccName,
                         BalanceAccountType balanceAccType,
                         BigDecimal balanceAccBalance,

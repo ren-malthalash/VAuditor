@@ -31,9 +31,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.mobdev.x22.tordillo.christiandave.vauditor.ui.login.LoginActivity;
+import com.mobdev.x22.tordillo.christiandave.vauditor.ui.login.LoginFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mobdev.x22.tordillo.christiandave.vauditor.databinding.ActivityMainBinding;
 import com.mobdev.x22.tordillo.christiandave.vauditor.ui.notifications.NotificationsActivity;
+import com.mobdev.x22.tordillo.christiandave.vauditor.ui.useraccount.AccountFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -90,7 +93,30 @@ public class MainActivity extends AppCompatActivity {
         assert navHostFragment != null;
         NavController navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        NavigationUI.setupWithNavController(navView, navController);
+
+        navView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            // Check if the account button was clicked
+            if (id == R.id.navigation_account) {
+                // Check if the user is logged in
+                if (!isLoggedIn) {
+                    // If not logged in, prompt the user to log in
+                    Toast.makeText(MainActivity.this, "Please log in to access your account.", Toast.LENGTH_SHORT).show();
+
+                    // Replace the current fragment with the LoginFragment
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    // If logged in, navigate to the account page
+                    Intent intent = new Intent(MainActivity.this, AccountFragment.class); // Use AccountActivity or desired activity
+                    startActivity(intent);
+                    return true; // Allow navigation to the account page
+                }
+            }
+
 
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
@@ -167,27 +193,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateNotificationCount(Menu menu) {
-//        MenuItem notificationItem = menu.findItem(R.id.action_main_menu_notification);
-
+        MenuItem notificationItem = menu.findItem(R.id.action_main_menu_notification);
     }
 
-    public void setNotificationCount(int count) {
+    public void setNotificationCount(int count){
         this.notificationCount = count;
         invalidateOptionsMenu(); // Refresh the menu to reflect changes
     }
-
-    private void saveSession(String username) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(KEY_IS_LOGGED_IN, true);
-        editor.putString(KEY_USERNAME, username);
-        editor.apply();
-    }
-
-    private void clearSession() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear(); // Removes all stored data
-        editor.apply();
-    }
-
-
 }
