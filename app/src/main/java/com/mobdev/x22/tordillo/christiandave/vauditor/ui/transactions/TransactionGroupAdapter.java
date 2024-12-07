@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class TransactionGroupAdapter extends RecyclerView.Adapter<TransactionGroupAdapter.TransactionGroupViewHolder> {
-    private ArrayList<TransactionGroupModel> transactionGroups;
+    private final ArrayList<TransactionGroupModel> transactionGroups;
 
     public TransactionGroupAdapter(ArrayList<TransactionGroupModel> transactionGroups) {
         this.transactionGroups = transactionGroups;

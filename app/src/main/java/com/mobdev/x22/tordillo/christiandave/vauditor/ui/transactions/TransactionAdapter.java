@@ -74,11 +74,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         }
 
 
-        @Override
-        public void onClick(View view) {
-            showCustomDialogue().show();
-        }
-
         private Dialog showCustomDialogue() {
             DialogueEditTransactionBinding dialogueEditTransactionBinding = DialogueEditTransactionBinding.inflate(activity.getLayoutInflater());
 

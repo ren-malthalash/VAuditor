@@ -22,9 +22,11 @@ import com.mobdev.x22.tordillo.christiandave.vauditor.model.transactions.Transac
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 public class DatabaseManager {
-    public static final int GLOBAL_DATABASE_VERSION = 8;
+    public static final int GLOBAL_DATABASE_VERSION = 12;
     public static final String DATABASE_NAME_VAUDITOR_DATA = "VAuditorData.db";
     private static final String UPDATE_WHERE_CLAUSE = "id = ?";
 
@@ -99,6 +101,7 @@ public class DatabaseManager {
         transactionDb.close();
         return transaction_id;
     }
+
     public ArrayList<BalanceAccountModel> findBalanceAccounts() {
         SQLiteDatabase db = balanceAccountDbHelper.getWritableDatabase();
         ArrayList<BalanceAccountModel> accounts = new ArrayList<>();
@@ -114,7 +117,7 @@ public class DatabaseManager {
         String selection = BalanceAccountEntry._ID + " = ?";
 
         Cursor cursor = db.query(
-                TransactionEntry.TABLE_NAME,
+                BalanceAccountEntry.TABLE_NAME,
                 columns,
                 selection,
                 null,
@@ -125,7 +128,7 @@ public class DatabaseManager {
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                boolean bDeleted = cursor.getInt(cursor.getColumnIndexOrThrow(BalanceAccountEntry.COLUMN_DELETED)) == 0;
+                boolean bDeleted = cursor.getInt(cursor.getColumnIndexOrThrow(BalanceAccountEntry.COLUMN_DELETED)) == 1;
                 if (bDeleted) {
                     continue;
                 }
@@ -145,6 +148,48 @@ public class DatabaseManager {
         }
 
         return accounts;
+    }
+
+    public Dictionary<String, Long> getBalanceAccountNames() {
+        SQLiteDatabase db = balanceAccountDbHelper.getWritableDatabase();
+        Dictionary<String, Long> accountNames = new Hashtable<String, Long>() {
+        };
+
+        String[] columns = {
+                BalanceAccountEntry._ID,
+                BalanceAccountEntry.COLUMN_NAME,
+                BalanceAccountEntry.COLUMN_DELETED
+        };
+
+        Cursor cursor = db.query(
+                BalanceAccountEntry.TABLE_NAME,
+                columns,
+                null,
+                null,
+                null,
+                null,
+                BalanceAccountEntry.COLUMN_NAME + " DESC"
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                boolean bDeleted = cursor.getInt(cursor.getColumnIndexOrThrow(BalanceAccountEntry.COLUMN_DELETED)) == 1;
+                if (bDeleted) {
+                    continue;
+                }
+
+                long _id = cursor.getLong(cursor.getColumnIndexOrThrow(BalanceAccountEntry._ID));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(BalanceAccountEntry.COLUMN_NAME));
+
+                accountNames.put(name, _id);
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        return accountNames;
     }
 
     public ArrayList<BalanceAccountModel> findBalanceAccounts(long balanceAccountId) {

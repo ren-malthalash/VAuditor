@@ -3,11 +3,15 @@ package com.mobdev.x22.tordillo.christiandave.vauditor.database.balanceaccounts;
 import static com.mobdev.x22.tordillo.christiandave.vauditor.database.DatabaseManager.DATABASE_NAME_VAUDITOR_DATA;
 import static com.mobdev.x22.tordillo.christiandave.vauditor.database.DatabaseManager.GLOBAL_DATABASE_VERSION;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.mobdev.x22.tordillo.christiandave.vauditor.database.balanceaccounts.BalanceAccountContract.BalanceAccountEntry;
+import com.mobdev.x22.tordillo.christiandave.vauditor.database.transactions.TransactionGroupContract;
+
+import java.time.ZonedDateTime;
 
 public class BalanceAccountDbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = GLOBAL_DATABASE_VERSION;
@@ -32,6 +36,35 @@ public class BalanceAccountDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(SQL_CREATE_ENTRIES);
+        insertInitialAccounts(sqLiteDatabase);
+    }
+
+    private void insertInitialAccounts(SQLiteDatabase db) {
+        ContentValues values = new ContentValues();
+
+        values.put(BalanceAccountEntry.COLUMN_NAME, "Cash");
+        values.put(BalanceAccountEntry.COLUMN_TYPE, "Person");
+        values.put(BalanceAccountEntry.COLUMN_BALANCE, "0");
+        values.put(BalanceAccountEntry.COLUMN_DELETED, 0);
+        db.insert(BalanceAccountEntry.TABLE_NAME, null, values);
+
+        values.put(BalanceAccountEntry.COLUMN_NAME, "BDO");
+        values.put(BalanceAccountEntry.COLUMN_TYPE, "Banking Company");
+        values.put(BalanceAccountEntry.COLUMN_BALANCE, "0");
+        values.put(BalanceAccountEntry.COLUMN_DELETED, 0);
+        db.insert(BalanceAccountEntry.TABLE_NAME, null, values);
+
+        values.put(BalanceAccountEntry.COLUMN_NAME, "GCash");
+        values.put(BalanceAccountEntry.COLUMN_TYPE, "Banking Company");
+        values.put(BalanceAccountEntry.COLUMN_BALANCE, "0");
+        values.put(BalanceAccountEntry.COLUMN_DELETED, 0);
+        db.insert(BalanceAccountEntry.TABLE_NAME, null, values);
+
+        values.put(BalanceAccountEntry.COLUMN_NAME, "Security Bank");
+        values.put(BalanceAccountEntry.COLUMN_TYPE, "Banking Company");
+        values.put(BalanceAccountEntry.COLUMN_BALANCE, "0");
+        values.put(BalanceAccountEntry.COLUMN_DELETED, 0);
+        db.insert(BalanceAccountEntry.TABLE_NAME, null, values);
     }
 
     @Override
