@@ -4,21 +4,20 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.Manifest;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
@@ -36,7 +35,7 @@ import com.mobdev.x22.tordillo.christiandave.vauditor.ui.notifications.Notificat
 
 public class MainActivity extends AppCompatActivity {
 
-    private static TextView notifCount;
+    private TextView notifCount;
     private ActivityMainBinding binding;
     private int notificationCount = 0;
 
@@ -45,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private static SpeechRecognizer speechRecognizer;
 
     private static Resources resources;
+
+    private VoiceCommandRecognition voiceCommandRecognition;
 
     boolean bSpeechOn;
 
@@ -78,80 +79,33 @@ public class MainActivity extends AppCompatActivity {
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
 
+        //.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         Intent speechRecognizeIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-                .putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
                 .putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, true)
                 .putExtra(RecognizerIntent.LANGUAGE_MODEL_FREE_FORM, true)
                 .putExtra(RecognizerIntent.EXTRA_PROMPT, true);
-        ;
 
-        fabVoiceRecognition.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!bSpeechOn) {
-                    //Start listening
-                    Random rnd = new Random();
-                    fabVoiceRecognition.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.red_700)));
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.custom_toast,
+                (ViewGroup) findViewById(R.id.toast_layout_root));
 
-                    speechRecognizer.startListening(speechRecognizeIntent);
-                    bSpeechOn = true;
-                } else {
-                    //Stop listening
-                    fabVoiceRecognition.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.purple_500)));
+        voiceCommandRecognition = new VoiceCommandRecognition(this, fabVoiceRecognition, layout);
 
-                    speechRecognizer.stopListening();
-                    bSpeechOn = false;
-                }
-            }
-        });
+        speechRecognizer.setRecognitionListener(voiceCommandRecognition);
 
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
-            @Override
-            public void onReadyForSpeech(Bundle bundle) {
+        fabVoiceRecognition.setOnClickListener(view -> {
+            if (!voiceCommandRecognition.isSpeechOn()) {
+                //Start listening
+                fabVoiceRecognition.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.red_700)));
 
-            }
+                speechRecognizer.startListening(speechRecognizeIntent);
+                voiceCommandRecognition.setSpeechOn(true);
+            } else {
+                //Stop listening
+                fabVoiceRecognition.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.purple_500)));
 
-            @Override
-            public void onBeginningOfSpeech() {
-
-            }
-
-            @Override
-            public void onRmsChanged(float v) {
-
-            }
-
-            @Override
-            public void onBufferReceived(byte[] bytes) {
-
-            }
-
-            @Override
-            public void onEndOfSpeech() {
-
-            }
-
-            @Override
-            public void onError(int i) {
-
-            }
-
-            @Override
-            public void onResults(Bundle bundle) {
-                ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-
-                assert data != null;
-                Toast.makeText(getApplicationContext(), data.get(0), Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onPartialResults(Bundle bundle) {
-
-            }
-
-            @Override
-            public void onEvent(int i, Bundle bundle) {
-
+                speechRecognizer.stopListening();
+                voiceCommandRecognition.setSpeechOn(false);
             }
         });
     }

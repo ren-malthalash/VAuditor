@@ -1,5 +1,11 @@
 package com.mobdev.x22.tordillo.christiandave.vauditor.ui.transactions;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +15,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mobdev.x22.tordillo.christiandave.vauditor.R;
+import com.mobdev.x22.tordillo.christiandave.vauditor.VAuditorApp;
+import com.mobdev.x22.tordillo.christiandave.vauditor.database.DatabaseManager;
+import com.mobdev.x22.tordillo.christiandave.vauditor.databinding.DialogueEditTransactionBinding;
+import com.mobdev.x22.tordillo.christiandave.vauditor.databinding.ItemTransactionBinding;
 import com.mobdev.x22.tordillo.christiandave.vauditor.model.transactions.TransactionModel;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
     private ArrayList<TransactionModel> transactions;
+    private static Activity activity;
 
     public TransactionAdapter(ArrayList<TransactionModel> transactions) {
         this.transactions = transactions;
@@ -42,6 +54,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     static class TransactionViewHolder extends RecyclerView.ViewHolder {
         TextView transactionName, transactionAmount, transactionNotes;
+        private ItemTransactionBinding transactionBinding;
+        private int pos = -1;
+        private TransactionModel transaction;
 
         TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -49,5 +64,53 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             transactionAmount = itemView.findViewById(R.id.transactionAmount);
             transactionNotes = itemView.findViewById(R.id.transactionNotes);
         }
+
+        public void bindTransactions(TransactionModel singleTransaction, int position) {
+            this.pos = position;
+            this.transaction = singleTransaction;
+
+            this.transactionBinding.transactionName.setText(this.transaction.getTransactionName());
+            this.transactionBinding.transactionAmount.setText(this.transaction.getTransactionAmount().toString());
+            this.transactionBinding.transactionNotes.setText(this.transaction.getTransactionNotes());
+        }
+
+
+        private Dialog showCustomDialogue() {
+            DialogueEditTransactionBinding dialogueEditTransactionBinding = DialogueEditTransactionBinding.inflate(activity.getLayoutInflater());
+
+            dialogueEditTransactionBinding.editTransactionName.setText(this.transaction.getTransactionId() + "-" + this.transaction.getTransactionName());
+            dialogueEditTransactionBinding.editTransactionAmount.setText(this.transaction.getTransactionAmount().toString());
+            dialogueEditTransactionBinding.editNotes.setText(this.transaction.getTransactionNotes());
+
+            return new AlertDialog.Builder(activity)
+
+                    .setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            DatabaseManager transactionDB = VAuditorApp.getDatabaseManager();
+
+                            TransactionModel singleTransaction = null;
+                            try {
+                                singleTransaction = new TransactionModel(
+                                        singleTransaction.getTransactionId(),
+                                        singleTransaction.getTransactionGroupId(),
+                                        singleTransaction.getTransactionName(),
+                                        singleTransaction.getTransactionAmount(),
+                                        singleTransaction.getTransactionNotes());
+
+                                transactionDB.updateTransaction(singleTransaction.getTransactionId(), singleTransaction);
+
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+
+                        }})
+                    // If the user presses cancel, nothing happens.
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }})
+                    .create();
+        }
     }
 }
+
