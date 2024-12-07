@@ -74,7 +74,7 @@ public class AddTransactionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 BigDecimal bdTransactionAmount = new BigDecimal(Long.parseLong(transactionAmount.getText().toString()));
                 Log.d("BIG DECIMAL AMOUNT", bdTransactionAmount + "");
-                // transactionId and transactionGroupId has a value of 1 as idk how to increment it properly
+
                 long fromAccountId = 0;
                 if (balanceAccountNames.get(fromAccount.getSelectedItem().toString()) != null) {
                     fromAccountId = balanceAccountNames.get(fromAccount.getSelectedItem().toString());

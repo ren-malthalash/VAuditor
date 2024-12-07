@@ -26,7 +26,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 public class DatabaseManager {
-    public static final int GLOBAL_DATABASE_VERSION = 12;
+    public static final int GLOBAL_DATABASE_VERSION = 13;
     public static final String DATABASE_NAME_VAUDITOR_DATA = "VAuditorData.db";
     private static final String UPDATE_WHERE_CLAUSE = "id = ?";
 
@@ -95,8 +95,7 @@ public class DatabaseManager {
                                   ContentValues transactionValues) {
         SQLiteDatabase transactionDb = transactionsDbHelper.getWritableDatabase();
         long group_id = transactionDb.insert(TransactionGroupEntry.TABLE_NAME, null, groupValues);
-        transactionValues.put(TransactionEntry._ID, group_id);
-
+        transactionValues.put(TransactionEntry.COLUMN_GROUP_ID, group_id);
         long transaction_id = transactionDb.insert(TransactionEntry.TABLE_NAME, null, transactionValues);
         transactionDb.close();
         return transaction_id;
