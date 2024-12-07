@@ -2,7 +2,7 @@
 <resources>
     <style name="DarkModeButton" parent="Widget.MaterialComponents.Button">
         <!-- Change button background color -->
-        <item name="backgroundTint">@color/grey_700</item>
+        <item name="backgroundTint">@color/purple_500</item>
         <!-- Change button text color -->
         <item name="android:textColor">@android:color/white</item>
         <!-- Button corner radius -->
